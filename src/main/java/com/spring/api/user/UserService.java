@@ -27,7 +27,7 @@ public class UserService {
     public User loginUser(SignUpUserRequestDto signUpUserRequestDto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         User user = findByEmail(signUpUserRequestDto.getEmail());
-        encoder.matches(user.getEmail(), signUpUserRequestDto.getPassword());
+        encoder.matches(signUpUserRequestDto.getPassword(), user.getPassword());
         return user;
     }
 }
