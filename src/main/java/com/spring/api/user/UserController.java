@@ -29,11 +29,11 @@ public class UserController {
     }
 
     @GetMapping("/check-session")
-    public ResponseEntity<?> checkSession(HttpServletRequest request) {
+    public ResponseEntity<Object> checkSession(HttpServletRequest request) {
         Object user = request.getSession().getAttribute("user");
 
         if (user != null) {
-            return ResponseEntity.ok("User is logged in");
+            return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not logged in");
         }
