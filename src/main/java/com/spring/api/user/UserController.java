@@ -1,7 +1,6 @@
 package com.spring.api.user;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +28,10 @@ public class UserController {
     }
 
     @GetMapping("/check-session")
-    public ResponseEntity<Object> checkSession(HttpServletRequest request) {
+    public ResponseEntity<LoginUserResponseDto> checkSession(HttpServletRequest request) {
         Object user = request.getSession().getAttribute("user");
-
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User is not logged in");
-        }
+        String email = (String) request.getSession().getAttribute("email");
+        User findByUer = userService.findByEmail(email);
+        return ResponseEntity.ok(LoginUserResponseDto.loginUserResponseDto(findByUer));
     }
 }
