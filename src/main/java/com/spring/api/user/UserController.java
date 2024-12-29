@@ -21,11 +21,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@Validated @RequestBody SignUpUserRequestDto signUpUserRequestDto, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<SignUpUserResponseDto> login(@Validated @RequestBody SignUpUserRequestDto signUpUserRequestDto, HttpServletRequest httpServletRequest) {
         User user = userService.loginUser(signUpUserRequestDto);
         httpServletRequest.getSession().setAttribute("user", user);
         httpServletRequest.getSession().setMaxInactiveInterval(3600);
-        return ResponseEntity.ok(user);
+        return ResponseEntity.ok(SignUpUserResponseDto.signUpUserResponseDto(user));
     }
 
     @GetMapping("/check-session")
