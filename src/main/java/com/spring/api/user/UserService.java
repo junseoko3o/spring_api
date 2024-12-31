@@ -1,5 +1,6 @@
 package com.spring.api.user;
 
+import com.spring.api.common.RedisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final RedisService redisService;
 
     public User saveUser(SignUpUserRequestDto signUpUserRequestDto) {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
@@ -28,6 +30,7 @@ public class UserService {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         User user = findByEmail(signUpUserRequestDto.getEmail());
         encoder.matches(signUpUserRequestDto.getPassword(), user.getPassword());
+
         return user;
     }
 }
