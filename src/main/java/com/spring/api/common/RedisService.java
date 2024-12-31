@@ -1,10 +1,12 @@
 package com.spring.api.common;
 
 import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -42,5 +44,16 @@ public class RedisService {
         ValueOperations<String, Object> data = redisTemplate.opsForValue();
         data.getAndDelete(key);
         return "deleted";
+    }
+
+    public Map<Object, Object> getSessionData(String sessionId) {
+        String sessionKey = "spring:session:sessions:" + sessionId;
+        HashOperations<String, Object, Object> hashOperations = redisTemplate.opsForHash();
+        return hashOperations.entries(sessionKey);
+    }
+
+    public boolean deleteSession(String sessionId) {
+        String sessionKey = "spring:session:sessions:" + sessionId;
+        return redisTemplate.delete(sessionKey);
     }
 }
