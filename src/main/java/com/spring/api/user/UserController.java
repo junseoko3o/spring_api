@@ -1,5 +1,6 @@
 package com.spring.api.user;
 
+import com.spring.api.common.RedisService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,9 +15,11 @@ public class UserController {
     private int maxAge;
 
     private final UserService userService;
+    private final RedisService redisService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, RedisService redisService) {
         this.userService = userService;
+        this.redisService = redisService;
     }
 
     @PostMapping("/sign-up")
@@ -43,9 +46,18 @@ public class UserController {
 
     @GetMapping("/check-session")
     public ResponseEntity<LoginUserResponseDto> checkSession(HttpServletRequest request) {
-        Object user = request.getSession().getAttribute("user");
         String email = (String) request.getSession().getAttribute("email");
         User findByUer = userService.findByEmail(email);
         return ResponseEntity.ok(LoginUserResponseDto.loginUserResponseDto(findByUer));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletRequest httpServletRequest) {
+        HttpSession session = httpServletRequest.getSession(false);
+        if (session != null) {
+            redisService.deleteRedis(session.getId());
+            session.invalidate();
+        }
+        return ResponseEntity.ok("로그아웃이 성공적으로 처리되었습니다.");
     }
 }

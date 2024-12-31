@@ -28,8 +28,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         HttpSession session = request.getSession(false);
         if (session != null) {
-            User user = (User) session.getAttribute("user");
-            User findUser = (User) userDetailsService.loadUserByUsername(user.getEmail());
+            String email = (String) session.getAttribute("email");
+            User findUser = (User) userDetailsService.loadUserByUsername(email);
             if (findUser != null) {
                 GrantedAuthority authority = new SimpleGrantedAuthority("USER");
                 Authentication authentication = new UsernamePasswordAuthenticationToken(findUser, null, Collections.singleton(authority));
