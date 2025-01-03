@@ -1,6 +1,5 @@
 package com.spring.api.common;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -9,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class RedisService {
@@ -29,7 +29,7 @@ public class RedisService {
 
     public void setRedis(String key, String value, int ttl) {
         ValueOperations<String, Object> data = redisTemplate.opsForValue();
-        data.set(key, value, ttl);
+        data.set(key, value, ttl, TimeUnit.SECONDS);
     }
 
     public String getRedis(String key) {
