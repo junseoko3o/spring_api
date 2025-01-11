@@ -2,6 +2,7 @@ package com.spring.api.config;
 
 import com.spring.api.user.AuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+    @Value("${session.secret.key}")
+    private String secretKey;
 
     private final UserDetailsService userDetailsService;
 
@@ -49,9 +52,15 @@ public class WebSecurityConfig {
         http
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                                .sessionFixation().newSession()
                                 .maximumSessions(1)
+                                .maxSessionsPreventsLogin(false)
                                 );
 
+//        http
+//                .requiresChannel(requiresChannel ->
+//                        requiresChannel.anyRequest().requiresSecure());
+        
         http.exceptionHandling((exceptionHandling) ->
                 exceptionHandling.defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
                         new AntPathRequestMatcher("/**")));
