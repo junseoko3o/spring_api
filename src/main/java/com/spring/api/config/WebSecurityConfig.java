@@ -60,7 +60,7 @@ public class WebSecurityConfig {
 //        http
 //                .requiresChannel(requiresChannel ->
 //                        requiresChannel.anyRequest().requiresSecure());
-        
+
         http.exceptionHandling((exceptionHandling) ->
                 exceptionHandling.defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED),
                         new AntPathRequestMatcher("/**")));
